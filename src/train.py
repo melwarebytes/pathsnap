@@ -20,21 +20,15 @@ from sklearn.preprocessing import FunctionTransformer, StandardScaler
 from .data import EXCLUDED_TRIPS
 from .features import FEATURES, load_dataset
 from .metrics import point_metrics
+from .preprocess import log1p_heavy
 
 ROOT = Path(__file__).resolve().parents[1]
 RES, PLOTS, CACHE = ROOT / "artifacts" / "results", ROOT / "artifacts" / "plots", ROOT / "cache"
 SEED = 42
-HEAVY_TAIL = [FEATURES.index(c) for c in ("dt_prev", "dt_next", "arc_len", "edge_proj")]
-
-
-def _log1p_heavy(X):
-    X = np.array(X, np.float32, copy=True)
-    X[:, HEAVY_TAIL] = np.log1p(np.maximum(X[:, HEAVY_TAIL], 0))
-    return X
 
 
 def _scaled(est):  # heavy-tailed columns (gaps up to 153,064 s, arcs up to 9 km) are log-scaled for LR/MLP
-    return Pipeline([("log", FunctionTransformer(_log1p_heavy)), ("scale", StandardScaler()), ("clf", est)])
+    return Pipeline([("log", FunctionTransformer(log1p_heavy)), ("scale", StandardScaler()), ("clf", est)])
 
 
 def _xgb():

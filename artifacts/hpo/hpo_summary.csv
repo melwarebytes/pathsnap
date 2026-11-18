@@ -1,0 +1,2 @@
+model,trials,complete,pruned,wall_s,s_per_trial,best_n_estimators,best_learning_rate,best_subsample,best_colsample_bytree,best_reg_lambda,best_reg_alpha,best_max_depth,best_min_child_weight
+xgb,15,11,4,710.8726252500055,47.391508350000365,333,0.04922938601051943,0.5369013185489,0.755267366734532,0.008717876985630396,1.9786858418581352,6,7.5240429557656565
