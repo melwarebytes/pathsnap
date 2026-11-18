@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 DATA_ROOT = Path(str(os.environ.get("PATHSNAP_DATA", Path(__file__).resolve().parents[2])).strip())
-EXCLUDED_TRIPS = {"00000033", "00000054"}  # bad ground truth, see docs/PLAN.md section 1
+EXCLUDED_TRIPS = {"00000033", "00000054"}  # bad ground truth (route far from the GPS track)
 _M_PER_DEG = np.pi / 180 * 6371008.8
 
 

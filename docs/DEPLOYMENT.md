@@ -4,11 +4,8 @@ This guide covers the demo setup: **Laptop 1** runs the model API, **Laptop 2** 
 browser UI. It also contains the dry-run procedure, the demo-day runbook, the verification
 checklist and the screenshot list for report section 7.
 
-The API contract is fixed in `docs/PLAN.md` section 6.6. Commands below assume the repository is
+The API endpoints are defined in `api/server.py`. Commands below assume the repository is
 cloned as `codebase/` and that you run everything from inside it.
-
-> The repository is **private**. Cloning requires an accepted GitHub invitation for an account that
-> has read access. Do this before demo day, not on the day.
 
 ---
 
@@ -516,8 +513,7 @@ Follow section 6. Open the UI with `?api=http://<LAPTOP1_IP>:8000`, press **Conn
 
 ## 9. Verification checklist
 
-Tick every box before the evaluator arrives. These map to the C definition of done in
-`docs/handoff/TEAMMATE_C_api_ui.md` section 6.
+Tick every box before the evaluator arrives.
 
 - [ ] `uvicorn api.server:app --host 0.0.0.0 --port 8000` starts with the expected split and prints
       split, trip count, model name, `cv_top1`, `stub=False` and the data root.

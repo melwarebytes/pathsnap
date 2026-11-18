@@ -2,7 +2,7 @@
 
 Map matching and route reconstruction for noisy GPS tracks (UE24CS352A hackathon). Each GPS point is
 matched to a road arc with a gradient-boosting classifier over candidate arcs, then an HMM/Viterbi
-decoder turns the per-point probabilities into a connected route. The full design is in `docs/PLAN.md`.
+decoder turns the per-point probabilities into a connected route.
 
 ## Setup
 
@@ -20,7 +20,7 @@ Raw data is not in the repo. Expected layout, one folder above `codebase/`:
 Hackathon/
   train/<trip_id>/<trip_id>.{track,nodes,arcs,route}
   student_test/<trip_id>/...
-  evaluator_test/<trip_id>/...      (later)
+  evaluator_test/<trip_id>/...
   codebase/
 ```
 
@@ -56,8 +56,8 @@ python -m src.maps student_test 00000007 artifacts/models/final.joblib   # Foliu
 python -m pytest                                    # tests
 ```
 
-`evaluator_test` is never used for training or tuning; run
-`python -m src.evaluate --split evaluator_test` only once it is released.
+`evaluator_test` is never used for training or tuning:
+`python -m src.evaluate --split evaluator_test` scores it once.
 
 ## Results (student_test, 10 trips)
 
@@ -118,15 +118,6 @@ tests/            python -m pytest
 artifacts/        committed results, models, plots, samples
 cache/            local candidate tables (not committed)
 ```
-
-## Team
-
-| Module | Owner |
-|---|---|
-| `data.py`, `features.py`, `artifacts/sample/` | Merull (lead) |
-| `metrics.py`, `train.py`, `hpo.py` | A |
-| `hmm.py`, `predict.py`, `evaluate.py`, `maps.py` | B |
-| `api/server.py`, `ui/index.html`, `README.md` | C |
 
 ## Deployment (two laptops)
 
