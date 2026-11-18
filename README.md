@@ -39,6 +39,11 @@ In code: `from src.features import load_dataset, FEATURES`.
 
 ## Reproduce the results
 
+`PathSnap.ipynb` walks through the whole pipeline with outputs: EDA, features, the 6-model
+comparison, Optuna, a live re-score of student_test, HMM decoding, a Folium map and an in-process API
+call. It runs in about 20 s from committed results. Set `RUN_FULL = True` in the first cell to
+retrain everything instead.
+
 Run in this order from `codebase/` (after building the candidate tables above). Every step writes
 to `artifacts/` so the committed CSVs and plots can be regenerated.
 

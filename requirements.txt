@@ -13,3 +13,4 @@ seaborn>=0.13
 joblib>=1.3
 networkx>=3.2
 pytest>=8.0
+jupyter>=1.0
