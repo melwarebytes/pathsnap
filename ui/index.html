@@ -768,16 +768,61 @@
 
     state.layers = window.L.layerGroup().addTo(state.map);
 
-    var tiles = window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
-    });
-    var tileErrors = 0;
-    tiles.on('tileerror', function () {
-      tileErrors += 1;
-      if (tileErrors >= 3) el.mapOffline.classList.remove('hidden');
-    });
-    tiles.addTo(state.map);
+    /* Basemaps are tried in order. The public OSM tile server and CARTO's
+       keyless endpoint now return 403 / "API key required" placeholders on some
+       networks, so Esri World Street Map is first and OSM-France is the
+       fallback. If a provider fails three times, its layer is removed (no
+       broken-tile checkerboard) and the next provider is tried. If all fail,
+       the map keeps a neutral background and the geometry still draws. */
+    var BASEMAPS = [
+      {
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+        options: {
+          maxZoom: 19,
+          attribution: 'Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> &mdash; Esri, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
+        }
+      },
+      {
+        url: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+        options: {
+          subdomains: 'abc',
+          maxZoom: 20,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &mdash; <a href="https://openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'
+        }
+      }
+    ];
+    var baseLayer = null;
+
+    function removeBaseLayer() {
+      if (baseLayer) {
+        state.map.removeLayer(baseLayer);
+        baseLayer = null;
+      }
+    }
+
+    function addBaseLayer(index) {
+      if (index >= BASEMAPS.length) {
+        el.mapOffline.textContent = 'base map unavailable — geometry still drawn';
+        el.mapOffline.classList.remove('hidden');
+        return;
+      }
+
+      var spec = BASEMAPS[index];
+      var errors = 0;
+      var layer = window.L.tileLayer(spec.url, spec.options);
+      baseLayer = layer;
+      layer.on('tileerror', function () {
+        errors += 1;
+        if (errors >= 3 && baseLayer === layer) {
+          removeBaseLayer();
+          addBaseLayer(index + 1);
+        }
+      });
+      layer.addTo(state.map);
+      if (index === 0) el.mapOffline.classList.add('hidden');
+    }
+
+    addBaseLayer(0);
 
     var resizeTimer = null;
     window.addEventListener('resize', function () {

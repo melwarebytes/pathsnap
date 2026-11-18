@@ -463,14 +463,18 @@ Follow section 6. Open the UI with `?api=http://<LAPTOP1_IP>:8000`, press **Conn
 
 - Leaflet is loaded from the unpkg CDN first and falls back to `ui/vendor/` if that fails. The footer
   of the left panel shows which copy won: `leaflet: cdn`, `leaflet: vendor`, or `leaflet: failed`.
-- OpenStreetMap tiles need internet. Offline, the page shows "base map offline — geometry still
-  drawn"; the GPS and predicted polylines, markers, legend and metrics still render on a blank
-  background. That is acceptable — say so before the evaluator notices.
+- Basemap tiles need internet. The UI tries Esri World Street Map first, then OSM France. The public
+  `tile.openstreetmap.org` server and CARTO's keyless endpoint can return HTTP 403 or an "API key
+  required" watermark, so neither is used as the primary layer.
+- If a provider fails three times, its tile layer is removed (no broken-tile checkerboard) and the
+  next provider is tried. If all providers fail, the page shows "base map unavailable — geometry
+  still drawn"; the GPS and predicted polylines, markers, legend and metrics still render on a
+  neutral background. That is acceptable — say so before the evaluator notices.
 - Check before the demo:
   - `ui/vendor/leaflet.js`, `ui/vendor/leaflet.css` and `ui/vendor/images/` exist.
   - No external font or icon dependency (system fonts only).
-  - The only external URLs are the Leaflet CDN (with the vendor fallback), the OSM tile server and
-    its attribution link.
+  - The only external URLs are the Leaflet CDN (with the vendor fallback), the Esri/OSM-France tile
+    servers and their attribution links.
 
   ```bash
   ls ui/vendor ui/vendor/images
