@@ -21,8 +21,8 @@ from pydantic import BaseModel
 
 from src.data import list_trips, load_trip
 
-SPLIT = os.environ.get("PATHSNAP_SPLIT", "evaluator_test")
-MODEL_PATH = os.environ.get("PATHSNAP_MODEL", "artifacts/models/final.joblib")
+SPLIT = os.environ.get("PATHSNAP_SPLIT", "evaluator_test").strip()  # cmd "set X=y && ..." keeps a trailing space
+MODEL_PATH = os.environ.get("PATHSNAP_MODEL", "artifacts/models/final.joblib").strip()
 STUB = os.environ.get("PATHSNAP_STUB", "0").strip().lower() in {"1", "true", "yes"}
 METRIC_KEYS = ("top1", "route_f1", "route_precision", "route_recall", "continuity")
 

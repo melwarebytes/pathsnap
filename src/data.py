@@ -6,7 +6,7 @@ from typing import NamedTuple
 import numpy as np
 import pandas as pd
 
-DATA_ROOT = Path(os.environ.get("PATHSNAP_DATA", Path(__file__).resolve().parents[2]))
+DATA_ROOT = Path(str(os.environ.get("PATHSNAP_DATA", Path(__file__).resolve().parents[2])).strip())
 EXCLUDED_TRIPS = {"00000033", "00000054"}  # bad ground truth, see docs/PLAN.md section 1
 _M_PER_DEG = np.pi / 180 * 6371008.8
 
