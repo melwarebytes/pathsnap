@@ -104,6 +104,7 @@ def main() -> None:
     stm = point_metrics(st, p)
     (ROOT / "artifacts" / "models").mkdir(parents=True, exist_ok=True)
     joblib.dump(b, ROOT / "artifacts" / "models" / "final.joblib", compress=3)
+    (CACHE / "models").mkdir(parents=True, exist_ok=True)
     joblib.dump(b, CACHE / "models" / f"{a.model}_tuned.joblib")
 
     # tuned out-of-fold probabilities for the HMM CV evaluation (same folds as the search)

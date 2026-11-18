@@ -9,6 +9,7 @@ def _argmax_rows(trip_id: np.ndarray, pt: np.ndarray, p: np.ndarray) -> tuple[np
     new = np.r_[True, (trip_id[1:] != trip_id[:-1]) | (pt[1:] != pt[:-1])]
     gid = np.cumsum(new) - 1
     starts = np.flatnonzero(new)
+    assert len(starts) == len(set(zip(trip_id[starts], pt[starts]))), "rows must be grouped by (trip_id, pt_idx)"
     is_max = p == np.maximum.reduceat(p, starts)[gid]
     idx = np.flatnonzero(is_max)
     _, first = np.unique(gid[idx], return_index=True)
