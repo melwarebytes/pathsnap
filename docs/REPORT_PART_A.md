@@ -7,13 +7,13 @@ Primary metric: point Top-1 on labelled points. Baselines: nearest arc 55.1 %, n
 
 | Model | Family / config | CV Top-1 | CV macro F1 | CV log loss | ST Top-1 | ST macro F1 | ST log loss | Route F1 / continuity (classifier-only, ST) | Train s | Infer ms/trip |
 |---|---|---|---|---|---|---|---|---|---|---|
-| NB | probabilistic, Gaussian | 0.815 | 0.895 | 0.756 | 0.803 | 0.889 | 0.739 | 0.784 / 0.985 | 0.2 | 2.0 |
-| LR | linear, balanced weights, log1p+scaler | 0.853 | 0.916 | 0.195 | 0.857 | 0.919 | 0.183 | 0.843 / 0.988 | 2.9 | 8.0 |
+| NB | probabilistic, Gaussian | 0.815 | 0.894 | 0.756 | 0.803 | 0.889 | 0.739 | 0.784 / 0.985 | 0.2 | 2.0 |
+| LR | linear, balanced weights, log1p+scaler | 0.853 | 0.916 | 0.195 | 0.856 | 0.919 | 0.183 | 0.843 / 0.988 | 2.9 | 8.0 |
 | RF | 300 trees, min leaf 20 | 0.855 | 0.917 | 0.091 | 0.863 | 0.923 | 0.078 | 0.843 / 0.986 | 142 | 57.6 |
-| XGB | 400 trees, depth 6, lr 0.1 | 0.855 | 0.917 | 0.094 | 0.861 | 0.922 | 0.080 | 0.844 / 0.986 | 6.9 | 10.0 |
+| XGB | 400 trees, depth 6, lr 0.1 | 0.855 | 0.917 | 0.093 | 0.861 | 0.922 | 0.080 | 0.844 / 0.986 | 6.9 | 10.0 |
 | LGBM | 400 trees, 63 leaves, lr 0.05 | 0.850 | 0.914 | 0.104 | 0.860 | 0.921 | 0.090 | 0.791 / 0.984 | 13.1 | 49.4 |
-| MLP | (64,32), early stopping, log1p+scaler | 0.843 | 0.910 | 0.115 | 0.854 | 0.918 | 0.087 | 0.846 / 0.986 | 15.7 | 5.3 |
-| **XGB tuned (final)** | Optuna TPE, 15 trials | **0.857** | **0.918** | **0.091** | **0.864** | **0.924** | **0.078** | pending (HMM runs) | 6.9 | 8.8 |
+| MLP | (64,32), early stopping, log1p+scaler | 0.843 | 0.910 | 0.115 | 0.853 | 0.917 | 0.087 | 0.846 / 0.986 | 15.7 | 5.3 |
+| **XGB tuned (final)** | Optuna TPE, 15 trials | **0.857** | **0.918** | **0.091** | **0.864** | **0.924** | **0.078** | 0.847 / 0.986 (+HMM: 0.985 / 1.000) | 6.9 | 8.8 |
 
 Route F1 and continuity use per-trip means of `evaluate.py --no-hmm`, so student_test Top-1 there differs slightly from the pooled Top-1 above.
 

@@ -56,24 +56,29 @@ python -m pytest                                    # tests
 
 ## Results (student_test, 10 trips)
 
-Point-level, six classifiers (full table: `artifacts/results/model_summary.csv`):
+Columns follow the model comparison table in the Deliverables PDF. CV = mean of 5 grouped folds on
+train; Test = student_test. Route continuity is classifier-only (argmax, then shortest-path gap
+filling), so every model is compared the same way. Sources: `artifacts/results/model_summary.csv`,
+`classifier_route_metrics.csv`, `hpo_comparison.csv`, `hmm_summary.csv`.
 
-| Model | CV Top-1 | CV macro F1 | Test Top-1 | Test macro F1 | Test log loss |
-|---|---|---|---|---|---|
-| Naive Bayes | 0.815 | 0.894 | 0.803 | 0.889 | 0.739 |
-| Logistic regression | 0.853 | 0.916 | 0.856 | 0.919 | 0.183 |
-| Random forest | 0.855 | 0.917 | 0.863 | 0.923 | 0.078 |
-| XGBoost | 0.855 | 0.917 | 0.861 | 0.922 | 0.080 |
-| LightGBM | 0.850 | 0.914 | 0.860 | 0.921 | 0.090 |
-| MLP | 0.843 | 0.910 | 0.853 | 0.917 | 0.087 |
-| **XGBoost, Optuna-tuned (final)** | 0.857 | 0.918 | 0.864 | 0.924 | 0.078 |
+| Model | Family | Key configuration | CV macro F1 | CV Top-1 | Test Top-1 | Route continuity | Test macro F1 | Test log loss | Inference ms/trip |
+|---|---|---|---|---|---|---|---|---|---|
+| Naive Bayes | probabilistic | Gaussian | 0.894 | 0.815 | 0.803 | 0.985 | 0.889 | 0.739 | 2.0 |
+| Logistic regression | linear | balanced weights, log1p + scaler | 0.916 | 0.853 | 0.856 | 0.988 | 0.919 | 0.183 | 8.0 |
+| Random forest | bagging (trees) | 300 trees, min leaf 20 | 0.917 | 0.855 | 0.863 | 0.986 | 0.923 | 0.078 | 57.6 |
+| XGBoost | boosting (trees) | 400 trees, depth 6, lr 0.1 | 0.917 | 0.855 | 0.861 | 0.986 | 0.922 | 0.080 | 10.0 |
+| LightGBM | boosting (trees) | 400 trees, 63 leaves, lr 0.05 | 0.914 | 0.850 | 0.860 | 0.984 | 0.921 | 0.090 | 49.4 |
+| MLP | neural network | (64, 32), early stopping, log1p + scaler | 0.910 | 0.843 | 0.853 | 0.986 | 0.917 | 0.087 | 5.3 |
+| **XGBoost tuned (final)** | boosting (trees) | Optuna TPE, 15 trials | 0.918 | 0.857 | 0.864 | 0.986 | 0.924 | 0.078 | 8.8 |
 
-Route-level with the tuned XGBoost (`artifacts/results/hmm_summary.csv`):
+Route-level with the tuned XGBoost on student_test (`artifacts/results/hmm_summary.csv`):
 
-| Decoder | Top-1 | Route F1 | Continuity |
-|---|---|---|---|
-| Classifier only (argmax) | 0.883 | 0.847 | 0.986 |
-| Classifier + HMM/Viterbi | 0.949 | 0.985 | 1.000 |
+| Decoder | Top-1 | Route F1 | Continuity | ms/trip |
+|---|---|---|---|---|
+| Classifier only (argmax) | 0.883 | 0.847 | 0.986 | 40 |
+| Classifier + HMM/Viterbi | 0.949 | 0.985 | 1.000 | 733 |
+
+Route-level Top-1 is a per-trip mean, so it differs from the pooled point Top-1 above.
 
 ## Where each Deliverable 1 component is
 
